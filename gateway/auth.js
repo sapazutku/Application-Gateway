@@ -16,6 +16,7 @@ exports.verifyToken = (req, res, next) => {
     if (err) {
       return res.status(401).send({ message: "Failed to authenticate token" });
     }
+    console.log("User authenticated successfully 🔑");
     req.userId = decoded.id;
     next();
   });
