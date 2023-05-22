@@ -15,7 +15,7 @@ async function uploadFile(token, filename) {
       "Content-Type": "application/octet-stream",
     },
   });
-
+  console.log("File was sent")
   return response.data.filename;
 }
 
@@ -26,8 +26,20 @@ async function downloadFile(token, filename) {
     },
     responseType: "stream",
   });
+  let size = 0;
+  await response.data.on("data", (chunk) => {
+    size += chunk.length;
+  });
+  
+  await response.data.on("end", () => {
+    //console.log(`File downloaded: ${filename} 📦 ${size / 1024} kb`);
+    // MB
+    var sizeInMB = size / (1024 * 1024);
+    console.log(`File downloaded: 📦 ${sizeInMB.toFixed(2)} MB`);
+  });
 
   response.data.pipe(fs.createWriteStream(filename));
+
 }
 
 (async () => {
